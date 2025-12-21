@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
-
+#include <allegro5/allegro_primitives.h>
+#include "responsive.h"
 
 /**
  * Exits the application if specified allegro initialiser
@@ -13,47 +14,12 @@ void initialise(bool initialised, const char *name)
         return;
 
     printf(
-        "ERROR: %s could not be initialised.",
+        "ERROR: %s could not be initialised.\n",
         name
     );
     exit(1);
 }
 
-/**
- * Holds information about the display.
- */
-typedef struct DisplayInfo
-{
-    /**
-     * Width of the game window in pixels.
-     */
-    unsigned int Width;
-    /**
-     * Height of the game window in pixels.
-     */
-    unsigned int Height;
-
-    /**
-     * Amount of frames to be displayed in a second.
-     */
-    float Frames;
-} DisplayInfo;
-
-/**
- * Builds a new DisplayInfo.
- */
-DisplayInfo* newDisplayInfo(
-    unsigned int width,
-    unsigned int height,
-    float frames
-)
-{
-    DisplayInfo* new = malloc(sizeof(DisplayInfo));
-    new->Width = width;
-    new->Height = height;
-    new->Frames = frames;
-    return new;
-}
 
 int main()
 {
@@ -104,10 +70,17 @@ int main()
         if(done)
             break;
 
+        int left = vw_ToPixels(10.0, dinfo);
+        int width = vw_ToPixels(25.0, dinfo);
+        int top = vh_ToPixels(10.0, dinfo);
+        int bottom = vh_ToPixels(35.0, dinfo);
+
         if(redraw && al_is_event_queue_empty(queue))
         {
-            al_clear_to_color(al_map_rgb(0, 0, 0));
-            al_draw_text(font_builtin, al_map_rgb(255, 255, 255), 0, 0, 0, "Hello world!");
+            al_clear_to_color(al_map_rgb(253, 239, 237));
+            al_draw_filled_rounded_rectangle(left, top, left+width, top+width, 48, 48, al_map_rgb(148, 112, 132));
+            //al_draw_text(font_builtin, al_map_rgb(255, 255, 255), 0, 0, 0, "Hello world!");
+            
             al_flip_display();
 
             redraw = false;
