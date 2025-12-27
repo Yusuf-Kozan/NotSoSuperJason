@@ -55,3 +55,16 @@ void UpdateLocation(Player * const player, const double delta_seconds)
         player->VelocityUp = 0;
     }
 }
+
+void freeObstacleList(ObstacleList *root)
+{
+    ObstacleList* head = root;
+    ObstacleList* prev;
+    while (head->next != NULL)
+    {
+        prev = head;
+        head = head->next;
+        free(prev);
+    }
+    free(head);
+}
