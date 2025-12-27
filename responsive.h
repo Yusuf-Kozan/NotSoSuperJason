@@ -13,6 +13,11 @@ typedef struct DisplayInfo
     unsigned int Height;
 
     /**
+     * Padding inside the game window in pixels.
+     */
+    unsigned int Padding;
+
+    /**
      * Amount of frames to be displayed in a second.
      */
     float Frames;
@@ -24,6 +29,7 @@ typedef struct DisplayInfo
 DisplayInfo* newDisplayInfo(
     unsigned int width,
     unsigned int height,
+    unsigned int padding,
     float frames
 );
 

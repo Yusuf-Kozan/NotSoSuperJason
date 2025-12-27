@@ -8,12 +8,14 @@
 DisplayInfo* newDisplayInfo(
     unsigned int width,
     unsigned int height,
+    unsigned int padding,
     float frames
 )
 {
     DisplayInfo* new = malloc(sizeof(DisplayInfo));
     new->Width = width;
     new->Height = height;
+    new->Padding = padding;
     new->Frames = frames;
     return new;
 }
