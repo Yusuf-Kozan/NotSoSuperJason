@@ -4,6 +4,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/events.h>
 #include <allegro5/keycodes.h>
+#include <allegro5/altime.h>
 #include "journey.h"
 
 /**
@@ -51,6 +52,8 @@ int main()
     bool redraw = true;
     ALLEGRO_EVENT event;
 
+    double last_time = al_get_time();
+
     Player* jason = newPlayer();
 
     #define KEY_SEEN     1
@@ -62,24 +65,30 @@ int main()
     al_start_timer(timer);
     while(1)
     {
+        double current_time = al_get_time();
+        double delta_time = current_time - last_time;
+        last_time = current_time;
+
+        UpdateLocation(jason, delta_time);
+        
         al_wait_for_event(queue, &event);
 
         switch(event.type)
         {
             case ALLEGRO_EVENT_TIMER:
                 // game logic goes here.
-                if(key[ALLEGRO_KEY_LEFT])
+                if (key[ALLEGRO_KEY_LEFT])
                 {
                     if (jason->LocationX > 2)
                         jason->LocationX -= 2;
                 }
-                if(key[ALLEGRO_KEY_RIGHT])
+                if (key[ALLEGRO_KEY_RIGHT])
                     jason->LocationX += 2;
 
-                if(key[ALLEGRO_KEY_ESCAPE])
+                if (key[ALLEGRO_KEY_ESCAPE])
                     done = true;
 
-                for(int i = 0; i < ALLEGRO_KEY_MAX; i++)
+                for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
                     key[i] &= ~KEY_SEEN;
 
                 redraw = true;
@@ -91,12 +100,22 @@ int main()
 
             case ALLEGRO_EVENT_KEY_DOWN:
                 key[event.keyboard.keycode] = KEY_SEEN | KEY_DOWN;
+                if (key[ALLEGRO_KEY_SPACE])
+                {
+                    //printf("jump\n");
+                    if (jason->LocationY <= 20)
+                    {
+                        jason->VelocityUp = 800;
+                        redraw = true;
+                    }
+                }
                 break;
 
             case ALLEGRO_EVENT_KEY_UP:
                 key[event.keyboard.keycode] &= ~KEY_DOWN;
                 break;
         }
+        
 
         if(done)
             break;
